@@ -6,11 +6,5 @@
   "types": "./src/index.ts",
   "scripts": {
     "lint": "nx lint content-repo"
-  },
-  "dependencies": {
-    "@adobe/aem-headless-client-js": "github:adobe/aem-headless-client-js"
-  },
-  "peerDependencies": {
-    "react": "^18.2.0"
   }
 }

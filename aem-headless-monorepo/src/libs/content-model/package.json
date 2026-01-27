@@ -6,8 +6,5 @@
   "types": "./src/index.ts",
   "scripts": {
     "lint": "nx lint content-model"
-  },
-  "dependencies": {
-    "zod": "^3.22.4"
   }
 }

@@ -1,10 +1,11 @@
 import express from 'express';
-import { graphqlHTTP } from 'express-graphql';
+import { createHandler } from 'graphql-http/lib/use/express';
+import { ruruHTML } from 'ruru/server';
 import cors from 'cors';
 import morgan from 'morgan';
 import { schema } from './graphql/schema.js';
 import { root } from './graphql/resolvers.js';
-import contentTree from './data/content-tree.json' assert { type: 'json' };
+import contentTree from './data/content-tree.json' with { type: 'json' };
 
 const app = express();
 const PORT = process.env.MOCK_SERVER_PORT ? parseInt(process.env.MOCK_SERVER_PORT) : 4502;
@@ -18,7 +19,7 @@ app.use(express.json());
 // Simulate AEM delay (optional)
 app.use((req, res, next) => {
   if (SIMULATE_DELAY > 0) {
-    setTimeout(next, SIMULATE_DELAY);
+    setTimeout(() => next(), SIMULATE_DELAY);
   } else {
     next();
   }
@@ -27,18 +28,23 @@ app.use((req, res, next) => {
 // ============================================
 // GraphQL Endpoint (Primary)
 // ============================================
-app.use('/content/graphql/global/endpoint.json', graphqlHTTP({
-  schema: schema,
-  rootValue: root,
-  graphiql: true, // Enable GraphiQL UI at this endpoint
-}));
 
-// Alternative endpoint paths (AEM compatibility)
-app.use('/content/_cq_graphql/global/endpoint.json', graphqlHTTP({
+const gqlHandler = createHandler({
   schema: schema,
   rootValue: root,
-  graphiql: true,
-}));
+});
+
+// Helper to serve GraphiQL or handle GraphQL
+const handleGraphQL = (req, res) => {
+  if (req.method === 'GET' && req.headers.accept?.includes('text/html')) {
+    res.type('html').send(ruruHTML({ endpoint: req.baseUrl + req.path }));
+  } else {
+    gqlHandler(req, res);
+  }
+};
+
+app.all('/content/graphql/global/endpoint.json', handleGraphQL);
+app.all('/content/_cq_graphql/global/endpoint.json', handleGraphQL);
 
 // ============================================
 // REST API Endpoints (For model.json access)

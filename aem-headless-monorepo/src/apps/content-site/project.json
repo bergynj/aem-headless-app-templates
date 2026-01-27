@@ -1,57 +1,35 @@
 {
   "name": "content-site",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/content-site/src",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "src/apps/content-site/src",
   "projectType": "application",
   "tags": ["type:app", "scope:content-site"],
   "targets": {
     "dev": {
-      "executor": "@nx/next:dev",
-      "defaultConfiguration": "development",
+      "executor": "nx:run-script",
       "options": {
-        "buildTarget": "content-site:build",
-        "dev": true,
-        "port": 3000
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "content-site:build:development"
-        },
-        "production": {
-          "buildTarget": "content-site:build:production"
-        }
+        "script": "dev"
       }
     },
     "build": {
-      "executor": "@nx/next:build",
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
+      "executor": "nx:run-script",
+      "outputs": ["{projectRoot}/.next"],
       "options": {
-        "outputPath": "dist/apps/content-site"
-      },
-      "configurations": {
-        "development": {},
-        "production": {}
+        "script": "build"
       }
     },
     "start": {
-      "executor": "@nx/next:start",
-      "defaultConfiguration": "production",
+      "executor": "nx:run-script",
       "options": {
-        "buildTarget": "content-site:build"
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "content-site:build:development"
-        },
-        "production": {
-          "buildTarget": "content-site:build:production"
-        }
+        "script": "start"
       }
     },
     "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
+      "executor": "nx:run-script",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "script": "lint"
+      }
     }
   }
 }

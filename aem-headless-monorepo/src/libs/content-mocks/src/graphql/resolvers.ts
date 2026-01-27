@@ -1,4 +1,4 @@
-import contentTree from '../data/content-tree.json' assert { type: 'json' };
+import contentTree from '../data/content-tree.json' with { type: 'json' };
 
 // Helper function to navigate content tree
 function getPageByPath(path: string): any {

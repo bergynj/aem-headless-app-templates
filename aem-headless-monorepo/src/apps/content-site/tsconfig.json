@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -23,10 +23,15 @@
     "paths": {
       "@/*": ["./src/*"],
       "@aem-headless/ui": ["../../libs/ui/src/index.ts"],
+      "@aem-headless/ui/*": ["../../libs/ui/src/components/*"],
       "@aem-headless/aem-ui": ["../../libs/aem-ui/src/index.ts"],
+      "@aem-headless/aem-ui/*": ["../../libs/aem-ui/src/*"],
       "@aem-headless/aem-renderer": ["../../libs/aem-renderer/src/index.ts"],
+      "@aem-headless/aem-renderer/*": ["../../libs/aem-renderer/src/*"],
       "@aem-headless/content-repo": ["../../libs/content-repo/src/index.ts"],
-      "@aem-headless/content-model": ["../../libs/content-model/src/index.ts"]
+      "@aem-headless/content-repo/*": ["../../libs/content-repo/src/*"],
+      "@aem-headless/content-model": ["../../libs/content-model/src/index.ts"],
+      "@aem-headless/content-model/*": ["../../libs/content-model/src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

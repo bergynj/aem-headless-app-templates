@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(done)",
+      "Bash(tree:*)",
+      "Bash(find:*)",
+      "Bash(npx nx:*)",
+      "Bash(npm install:*)"
+    ]
+  }
+}

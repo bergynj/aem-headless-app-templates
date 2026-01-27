@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    transpilePackages: [
+        '@aem-headless/ui',
+        '@aem-headless/aem-ui',
+        '@aem-headless/aem-renderer',
+        '@aem-headless/content-repo',
+        '@aem-headless/content-model',
+    ],
     images: {
         formats: ['image/avif', 'image/webp'],
         minimumCacheTTL: 600000,

@@ -1,4 +1,9 @@
-// Client exports
+// Client imports (for local use)
+import { AEMClient } from './clients/AEMClient';
+import { MockClient } from './clients/MockClient';
+import type { DataClient, FetchOptions } from './clients/DataClient';
+
+// Re-exports
 export { AEMClient } from './clients/AEMClient';
 export type { AEMClientConfig } from './clients/AEMClient';
 

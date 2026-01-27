@@ -16,7 +16,7 @@ export async function generateStaticParams() {
     }))
 }
 
-export default async function Page({params: {lang}}) {
+export default async function Page({params: {lang}}: {params: {lang: string}}) {
 
     const adventures = await getAdventures(lang);
     const featuredAdventure = adventures[9];

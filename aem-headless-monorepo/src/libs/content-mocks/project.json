@@ -1,12 +1,12 @@
 {
   "name": "content-mocks",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/content-mocks/src",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "src/libs/content-mocks/src",
   "projectType": "library",
   "tags": ["type:lib", "scope:content-mocks"],
   "targets": {
     "serve": {
-      "executor": "@nx/node:node",
+      "executor": "@nx/js:node",
       "options": {
         "buildTarget": "content-mocks:build",
         "watch": true
@@ -22,9 +22,9 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/content-mocks",
-        "main": "libs/content-mocks/src/server.ts",
-        "tsConfig": "libs/content-mocks/tsconfig.json",
-        "assets": ["libs/content-mocks/src/data/**/*"]
+        "main": "src/libs/content-mocks/src/server.ts",
+        "tsConfig": "src/libs/content-mocks/tsconfig.json",
+        "assets": ["src/libs/content-mocks/src/data/**/*"]
       }
     },
     "lint": {
