@@ -1,0 +1,9 @@
+node_modules
+.next
+dist
+.nx/cache
+coverage
+*.log
+.DS_Store
+.env.local
+.env*.local

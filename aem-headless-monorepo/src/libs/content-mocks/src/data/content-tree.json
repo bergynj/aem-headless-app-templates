@@ -1,0 +1,64 @@
+{
+  "/content/mysite": {
+    "en": {
+      "home": {
+        "_path": "/content/mysite/en/home",
+        "_type": "page",
+        "title": "Homepage",
+        "seoTitle": "Welcome to WKND",
+        "seoDescription": "The best adventure website",
+        "components": [
+          {
+            "_type": "wknd/components/hero",
+            "_path": "/content/mysite/en/home/jcr:content/hero",
+            "headline": "Welcome to WKND",
+            "subheadline": "Discover amazing adventures",
+            "ctaText": "Explore",
+            "ctaUrl": "/en-US/adventure-collection/all",
+            "backgroundImage": "/assets/hero-bg.jpg"
+          }
+        ]
+      },
+      "about": {
+        "_path": "/content/mysite/en/about",
+        "_type": "page",
+        "title": "About Us",
+        "seoTitle": "About WKND",
+        "seoDescription": "Learn more about our story",
+        "components": [
+          {
+            "_type": "wknd/components/text",
+            "_path": "/content/mysite/en/about/jcr:content/text1",
+            "text": "<h1>About Us</h1><p>We are a leading adventure company...</p>",
+            "richText": true
+          }
+        ]
+      },
+      "adventures": {
+        "_path": "/content/mysite/en/adventures",
+        "_type": "page",
+        "title": "Adventures",
+        "components": [],
+        "children": {
+          "riverside-camping-australia": {
+            "_path": "/content/mysite/en/adventures/riverside-camping-australia/riverside-camping-australia",
+            "_type": "adventure",
+            "title": "Riverside Camping Australia",
+            "slug": "riverside-camping-australia",
+            "price": "$299",
+            "tripLength": "3 Days",
+            "primaryImage": {
+              "_path": "/content/dam/wknd/en/adventures/riverside-camping-australia/riverside-camping-australia.jpg"
+            }
+          }
+        }
+      },
+      "faqs": {
+        "_path": "/content/mysite/en/faqs",
+        "_type": "page",
+        "title": "FAQs",
+        "components": []
+      }
+    }
+  }
+}

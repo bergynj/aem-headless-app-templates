@@ -4,6 +4,7 @@ These are sample apps and templates based on various frontend frameworks (e.g. N
 
 1. [Next.js + Headless GraphQL API + Remote SPA Editor](/nextjs-remotespa/)
 2. [Next.js + React Server Components + Headless GraphQL API + Universal Editor](/nextjs-rsc-universaleditor/)
+3. [Nx monorepo + Next.js + Universal Editor](/aem-headless-monorepo/) - personal repo
 
 ## Related references (other repos)
 
