@@ -1,11 +1,23 @@
+import { Request, Response, NextFunction } from 'express';
 import express from 'express';
 import { createHandler } from 'graphql-http/lib/use/express';
+// @ts-ignore
 import { ruruHTML } from 'ruru/server';
 import cors from 'cors';
 import morgan from 'morgan';
+import fs from 'fs';
+import path from 'path';
 import { schema } from './graphql/schema.js';
 import { root } from './graphql/resolvers.js';
-import contentTree from './data/content-tree.json' with { type: 'json' };
+
+// Load content tree dynamically to avoid ESM JSON import issues
+const dataPath = path.join(process.cwd(), 'src/libs/content-mocks/src/data/content-tree.json');
+let contentTree: any = {};
+try {
+  contentTree = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+} catch (e) {
+  console.error('Failed to load content-tree.json', e);
+}
 
 const app = express();
 const PORT = process.env.MOCK_SERVER_PORT ? parseInt(process.env.MOCK_SERVER_PORT) : 4502;
@@ -25,9 +37,9 @@ app.use((req, res, next) => {
   }
 });
 
-// ============================================
+// ============================================ 
 // GraphQL Endpoint (Primary)
-// ============================================
+// ============================================ 
 
 const gqlHandler = createHandler({
   schema: schema,
@@ -35,25 +47,91 @@ const gqlHandler = createHandler({
 });
 
 // Helper to serve GraphiQL or handle GraphQL
-const handleGraphQL = (req, res) => {
+const handleGraphQL = (req: Request, res: Response, next: NextFunction) => {
   if (req.method === 'GET' && req.headers.accept?.includes('text/html')) {
     res.type('html').send(ruruHTML({ endpoint: req.baseUrl + req.path }));
   } else {
-    gqlHandler(req, res);
+    gqlHandler(req, res, next);
   }
 };
 
-app.all('/content/graphql/global/endpoint.json', handleGraphQL);
-app.all('/content/_cq_graphql/global/endpoint.json', handleGraphQL);
+app.all('/content/graphql/global/endpoint.json', (req, res, next) => handleGraphQL(req, res, next));
+app.all('/content/_cq_graphql/global/endpoint.json', (req, res, next) => handleGraphQL(req, res, next));
 
 // ============================================
-// REST API Endpoints (For model.json access)
+// Persisted Query Emulation
 // ============================================
+app.get('/graphql/execute.json/*', (req: Request, res: Response, next: NextFunction) => {
+  const path = req.path;
+  const parts = path.split('/execute.json/');
+  const queryName = parts[1];
+
+  console.log(`[GraphQL] Emulating Persisted Query: ${queryName}`);
+
+  // Map known persisted queries to actual GraphQL operations
+  let query = '';
+  let variables = req.query || {};
+
+  if (queryName === 'aem-demo-assets/adventures-all') {
+    query = `
+      {
+        adventureList {
+          items {
+            _path
+            title
+            slug
+            price
+            tripLength
+            primaryImage {
+              ... on ImageRef {
+                _path
+              }
+            }
+          }
+        }
+      }
+    `;
+  } else if (queryName === 'aem-demo-assets/page-by-path') {
+    query = `
+      query PageByPath($_path: String!) {
+        pageByPath(_path: $_path) {
+          item {
+            _path
+            title
+            components {
+              _path
+              _type
+              text { html }
+            }
+          }
+        }
+      }
+    `;
+    // Ensure variables are properly typed
+    if (variables._path && typeof variables._path === 'string') {
+        // No action needed
+    }
+  } else {
+    console.warn(`[GraphQL] Unknown persisted query: ${queryName}`);
+    return res.status(404).json({ error: `Unknown persisted query: ${queryName}` });
+  }
+
+  // Inject the query into the request body so graphql-http can handle it
+  req.body = { query, variables };
+  req.method = 'POST'; // Switch to POST as graphql-http expects body for queries usually
+  
+  // Forward to the GraphQL handler
+  gqlHandler(req, res, next);
+});
+
+// ============================================ 
+// REST API Endpoints (For model.json access)
+// ============================================ 
 
 // Helper function to navigate content tree
 function getPageByPath(path: string): any {
   const parts = path.replace('/content/mysite/', '').split('/').filter(Boolean);
-  let current: any = contentTree['/content/mysite'];
+  let current: any = (contentTree as any)['/content/mysite'];
   
   for (const part of parts) {
     if (current.children && current.children[part]) {
@@ -68,7 +146,7 @@ function getPageByPath(path: string): any {
   return current;
 }
 
-function getAllPages(node: any = contentTree['/content/mysite'], results: any[] = []): any[] {
+function getAllPages(node: any = (contentTree as any)['/content/mysite'], results: any[] = []): any[] {
   Object.keys(node).forEach(key => {
     if (key !== 'children' && typeof node[key] === 'object' && node[key]._path) {
       results.push(node[key]);
@@ -81,7 +159,7 @@ function getAllPages(node: any = contentTree['/content/mysite'], results: any[] 
 }
 
 // Get page content as JSON (model.json pattern)
-app.get('/content/mysite/*', (req, res) => {
+app.get('/content/mysite/*', (req: Request, res: Response) => {
   const path = req.path;
   console.log(`[REST] Fetching: ${path}`);
   
@@ -100,7 +178,7 @@ app.get('/content/mysite/*', (req, res) => {
 });
 
 // Get component as JSON
-app.get('/content/mysite/*/jcr:content/*', (req, res) => {
+app.get('/content/mysite/*/jcr:content/*', (req: Request, res: Response) => {
   const path = req.path.replace(/\.json$/, '');
   console.log(`[REST] Fetching component: ${path}`);
   
@@ -125,10 +203,10 @@ app.get('/content/mysite/*/jcr:content/*', (req, res) => {
   res.json(component);
 });
 
-// ============================================
+// ============================================ 
 // Mock Assets Endpoint
-// ============================================
-app.get('/assets/*', (req, res) => {
+// ============================================ 
+app.get('/assets/*', (req: Request, res: Response) => {
   // In real implementation, serve actual files
   // For now, return placeholder
   res.json({
@@ -138,12 +216,12 @@ app.get('/assets/*', (req, res) => {
   });
 });
 
-// ============================================
+// ============================================ 
 // Utility Endpoints
-// ============================================
+// ============================================ 
 
 // List all available routes
-app.get('/api/routes', (req, res) => {
+app.get('/api/routes', (req: Request, res: Response) => {
   const routes = getAllPages();
   res.json({
     total: routes.length,
@@ -156,7 +234,7 @@ app.get('/api/routes', (req, res) => {
 });
 
 // Get route configuration (for Next.js generateStaticParams)
-app.get('/api/routes/config', (req, res) => {
+app.get('/api/routes/config', (req: Request, res: Response) => {
   const routes = getAllPages();
   
   const config = routes.map((route: any) => {
@@ -177,8 +255,8 @@ app.get('/api/routes/config', (req, res) => {
 });
 
 // Health check
-app.get('/health', (req, res) => {
-  res.json({ 
+app.get('/health', (req: Request, res: Response) => {
+  res.json({
     status: 'healthy', 
     timestamp: new Date().toISOString(),
     endpoints: {
@@ -190,13 +268,13 @@ app.get('/health', (req, res) => {
 });
 
 // Root redirect
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.redirect('/content/graphql/global/endpoint.json');
 });
 
-// ============================================
+// ============================================ 
 // Start Server
-// ============================================
+// ============================================ 
 
 app.listen(PORT, () => {
   console.log('\n🚀 Mock AEM Server Started');

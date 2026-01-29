@@ -18,8 +18,8 @@ export async function generateStaticParams() {
 
 export default async function Page({params: {lang}}: {params: {lang: string}}) {
 
-    const adventures = await getAdventures(lang);
-    const featuredAdventure = adventures[9];
+    const adventures = await getAdventures(lang) || [];
+    const featuredAdventure = adventures.length > 0 ? (adventures[9] || adventures[0]) : null;
 
     return (
         <main className=" px-0 mx-0">

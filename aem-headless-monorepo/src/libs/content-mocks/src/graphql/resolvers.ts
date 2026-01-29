@@ -1,9 +1,21 @@
-import contentTree from '../data/content-tree.json' with { type: 'json' };
+import fs from 'fs';
+import path from 'path';
+
+// Load content tree dynamically to avoid ESM JSON import issues
+// We need to resolve the path relative to the project root when running via Nx
+const dataPath = path.join(process.cwd(), 'src/libs/content-mocks/src/data/content-tree.json');
+let contentTree: any = {};
+try {
+  contentTree = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+} catch (e) {
+  // Fallback for different execution contexts if needed, or just log
+  console.error('Failed to load content-tree.json in resolvers', e);
+}
 
 // Helper function to navigate content tree
 function getPageByPath(path: string): any {
   const parts = path.replace('/content/mysite/', '').split('/').filter(Boolean);
-  let current: any = contentTree['/content/mysite'];
+  let current: any = (contentTree as any)['/content/mysite'];
   
   for (const part of parts) {
     if (current.children && current.children[part]) {
@@ -19,7 +31,7 @@ function getPageByPath(path: string): any {
 }
 
 // Helper to get all pages (for list queries)
-function getAllPages(node: any = contentTree['/content/mysite'], results: any[] = []): any[] {
+function getAllPages(node: any = (contentTree as any)['/content/mysite'], results: any[] = []): any[] {
   Object.keys(node).forEach(key => {
     if (key !== 'children' && typeof node[key] === 'object' && node[key]._path) {
       results.push(node[key]);

@@ -8,6 +8,7 @@ export interface HeroAdventureCardProps {
 }
 
 export default function HeroAdventureCard({ adventure }: HeroAdventureCardProps) {
+  if (!adventure) return null;
   const pathItems = adventure._path.split('/');
   const cfPath = pathItems.slice(Math.max(pathItems.length - 2, 0)).join('/');
   const href = `/adventures/${cfPath}`;
