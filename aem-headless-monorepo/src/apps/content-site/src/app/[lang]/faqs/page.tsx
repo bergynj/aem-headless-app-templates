@@ -1,7 +1,7 @@
 import Image from 'next/image'
 
 import React from 'react';
-import Accordion from "@/components/Accordion";
+import Accordion from "@aem-headless/ui/Accordion";
 
 const items = [
     {
@@ -41,7 +41,13 @@ export async function generateStaticParams() {
     }))
 }
 
-export default async function Page({params: {lang}}) {
+interface PageProps {
+    params: {
+        lang: string;
+    };
+}
+
+export default async function Page({params: {lang}}: PageProps) {
     return (
         <main className=" text-lg px-4">
             <div className="max-w-[1154px] mx-auto ">

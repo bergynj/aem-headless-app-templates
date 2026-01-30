@@ -14,7 +14,16 @@
 import Link from 'next/link'
 import Image from 'next/image';
 
-export default async function AdventureCard({eager, href, title, price, duration, imageSrc}) {
+interface AdventureCardProps {
+    eager?: boolean;
+    href: string;
+    title: string;
+    price: string;
+    duration: string;
+    imageSrc: string;
+}
+
+export default async function AdventureCard({eager, href, title, price, duration, imageSrc}: AdventureCardProps) {
     return (
         <div className="group relative">
             <Link href={href}>

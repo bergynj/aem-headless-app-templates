@@ -2,7 +2,7 @@ import AEMHeadless from '@adobe/aem-headless-client-js';
 //import getLocalStaticData from './data';
 //import fetch from 'node-fetch';
 
-export const scrollToId = (id) => {
+export const scrollToId = (id: string) => {
   if (!id.startsWith('#')) {
     return;
   }
@@ -18,12 +18,12 @@ export const scrollToId = (id) => {
 };
 
 const tryFetch = async (
-  AEMHeadless,
-  host,
-  endpoint,
-  variation,
-  setState,
-  isAuthor,
+  AEMHeadless: any,
+  host: string,
+  endpoint: string,
+  variation: string,
+  setState: (data: any) => void,
+  isAuthor: boolean,
 ) => {
   try {
     AEMHeadless.serviceURL = host;
@@ -43,14 +43,33 @@ const tryFetch = async (
   }
 };
 
+interface SetStates {
+  setData: (data: any) => void;
+  setIsAuthorVersion: (isAuthor: boolean) => void;
+  setFetchError: (error: { type: string; url: string }) => void;
+  setCustomHost: (host: string) => void;
+}
+
+interface HostConfig {
+  authorHost: string;
+  publishHost: string;
+  endpoint: string;
+  publishPath?: string;
+}
+
+interface FetchVariation {
+  variationName: string;
+  setData: (data: any) => void;
+}
+
 async function getData(
-  variation,
-  setStates,
-  hostConfig,
-  authorHost,
-  publishHost,
-  endpoint,
-  AEMHeadless,
+  variation: string,
+  setStates: SetStates,
+  hostConfig: HostConfig,
+  authorHost: string,
+  publishHost: string,
+  endpoint: string,
+  AEMHeadless: any,
 ) {
   const { setData, setIsAuthorVersion, setFetchError, setCustomHost } =
     setStates;
@@ -62,7 +81,7 @@ async function getData(
   // return;
 
   // tryFetch() will return a truthy value if the fetch is successful
-  let fetchWasSuccessful = null;
+  let fetchWasSuccessful: boolean | string | null = null;
 
   const arr = [
     // {host: authorHost, isAuthor: true},
@@ -87,7 +106,7 @@ async function getData(
 
   // if no fetch was successful, set error state
   if (fetchWasSuccessful === false) {
-    setFetchError({ type: 'publish', url: hostConfig.publishPath });
+    setFetchError({ type: 'publish', url: hostConfig.publishPath || '' });
   }
   // if the author host was successful change the state to render the page in author view
   if (fetchWasSuccessful === 'author') {
@@ -95,7 +114,7 @@ async function getData(
   }
 }
 
-function fetchAndSetData(hostConfig, setStates, fetchVariations) {
+function fetchAndSetData(hostConfig: HostConfig, setStates: SetStates, fetchVariations: FetchVariation[]) {
   // initializing AEM headless here for later
   const aemHeadlessClient = new AEMHeadless({
     serviceUrl: '',
@@ -145,7 +164,7 @@ function fetchAndSetData(hostConfig, setStates, fetchVariations) {
 
 export { fetchAndSetData };
 
-export async function downloadData(hostConfig, variation) {
+export async function downloadData(hostConfig: HostConfig, variation: string) {
   // initializing AEM headless here for later
 
   let authorHost = hostConfig.authorHost;
@@ -161,8 +180,8 @@ export async function downloadData(hostConfig, variation) {
     endpoint = endpoint.substring(1);
   }
 
-  const fetchWithReload = async (url, init) => {
-    return fetch(url, { next: { revalidate: 36000 } });
+  const fetchWithReload = async (url: string, init?: RequestInit) => {
+    return fetch(url, { next: { revalidate: 36000 } } as any);
   };
 
   const aemHeadlessClient = new AEMHeadless({

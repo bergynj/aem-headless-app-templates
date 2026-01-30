@@ -1,7 +1,7 @@
 import {cache} from 'react';
 import {AdventureClient} from "../../../lib/adventures";
 import Image from "next/image";
-import HeroArticleCard from "@/components/HeroArticleCard";
+import HeroArticleCard from "../../../components/HeroArticleCard";
 import AdventuresList from "../../../components/AdventuresList";
 
 export const revalidate = 43200; // 12 hours in seconds
@@ -30,7 +30,13 @@ export async function generateStaticParams() {
   }))
 }
 
-export default async function Page({params: {lang}}) {
+interface PageProps {
+    params: {
+        lang: string;
+    };
+}
+
+export default async function Page({params: {lang}}: PageProps) {
   return (
       <main className=" px-4">
         <div className="">
@@ -47,9 +53,9 @@ export default async function Page({params: {lang}}) {
                 <Image className="mx-0 w-full"
                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                        quality={75}
-                       eager={"true"}
                        priority={true}
                        loading={'eager'}
+                       alt={'Experience the world with us'}
                        src="https://wknd.site/us/en/adventures/_jcr_content/root/container/teaser.coreimg.60.1600.jpeg/1660323801921/adobestock-216674449.jpeg"
                        width={1275}
                        height={717}

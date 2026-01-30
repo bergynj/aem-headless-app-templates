@@ -24,7 +24,12 @@ function SearchBox() {
     )
 }
 
-export default function Navbar({isOpen, toggle}) {
+interface NavbarProps {
+    isOpen: boolean;
+    toggle: () => void;
+}
+
+export default function Navbar({isOpen, toggle}: NavbarProps) {
     return (
         <nav className="sticky top-0 z-50 shadow-md">
             <div className="bg-black dark:bg-gray-900 p-1 px-3">

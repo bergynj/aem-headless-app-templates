@@ -1,7 +1,14 @@
 import Image from 'next/image'
-import Social from "@/components/Social";
+import Social from "@aem-headless/ui/Social";
 
-export default async function AvatarCard({imageUrl, name, role, social}) {
+export interface AvatarCardProps {
+    imageUrl: string;
+    name: string;
+    role: string;
+    social?: any; // Define more strictly if social structure is known
+}
+
+export default async function AvatarCard({imageUrl, name, role, social}: AvatarCardProps) {
     return (
         <div className="flex flex-col items-center">
             <Image
@@ -15,5 +22,3 @@ export default async function AvatarCard({imageUrl, name, role, social}) {
         </div>
     )
 }
-
-

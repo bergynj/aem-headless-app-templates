@@ -12,7 +12,12 @@
  */
 import Link from 'next/link'
 
-export default function Sidebar({isOpen, toggle}) {
+interface SidebarProps {
+    isOpen: boolean;
+    toggle: () => void;
+}
+
+export default function Sidebar({isOpen, toggle}: SidebarProps) {
     return (
         <nav className="touch-none overscroll-none no-scrollbar bg-white dark:bg-gray-800 transition-all duration-400 md:hidden fixed w-full h-full overflow-hidden  pt-[135px] left-0 z-10"
              style={{

@@ -1,10 +1,19 @@
 "use client"
 import React, { useState } from 'react';
 
-const Accordion = ({items}) => {
-    const [activeIndex, setActiveIndex] = useState(null);
+interface AccordionItem {
+    title: string;
+    content: React.ReactNode;
+}
 
-    const onTitleClick = (index) => {
+interface AccordionProps {
+    items: AccordionItem[];
+}
+
+const Accordion = ({items}: AccordionProps) => {
+    const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+    const onTitleClick = (index: number) => {
         if (index === activeIndex) {
             setActiveIndex(null); // Close the item if it's currently opened
         } else {

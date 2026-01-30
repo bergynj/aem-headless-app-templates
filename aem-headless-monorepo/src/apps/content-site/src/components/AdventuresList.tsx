@@ -11,63 +11,67 @@
  *
  */
 
-import AdventureCard from "@aem-headless/ui/AdventureCard";
+import AdventureCard from "./AdventureCard";
 import Link from "next/link";
-import { adventureCollections, getAdventures, NEXT_PUBLIC_AEM_HOST } from "../lib/adventures";
-import type { Adventure } from "@aem-headless/content-model";
+import {adventureCollections, getAdventures, NEXT_PUBLIC_AEM_HOST} from "../lib/adventures";
+import { Adventure } from "@aem-headless/content-model";
 
-export interface AdventuresListProps {
-  lang?: string;
-  collectionSlug?: string;
-  showCategoryPicker?: boolean;
+interface AdventuresListProps {
+    lang?: string;
+    collectionSlug?: string;
+    showCategoryPicker?: boolean;
 }
 
-export default async function AdventuresList({ 
-  lang = '', 
-  collectionSlug = 'all', 
-  showCategoryPicker = true 
-}: AdventuresListProps) {
-  const adventures = await getAdventures(lang);
-  const activeCollection = adventureCollections.find((collection) => collection.slug === collectionSlug);
-  const filteredAdventures = adventures.filter(activeCollection?.predicate || (() => true));
+export default async function AdventuresList({lang = '', collectionSlug = 'all', showCategoryPicker = true}: AdventuresListProps) {
+    const adventures = await getAdventures(lang) || [];
+    const activeCollection = adventureCollections.find((collection) => collection.slug === collectionSlug);
+    
+    if (!activeCollection) {
+        return <div>Collection not found</div>;
+    }
 
-  return (
-    <div className="mb-20">
-      {showCategoryPicker && (
-        <ul className="flex-wrap flex p-2 max-w-[1154px] md:px-5 mx-auto ">
-          {adventureCollections.map((filter) => (
-            <li className="mr-3" key={filter.slug}>
-              <Link
-                className={`${filter.slug === activeCollection?.slug ? "bg-black text-white hover:text-yellow dark:bg-yellow dark:text-black dark:hover:text-black" : " text-black hover:bg-yellow dark:bg-black dark:text-white dark:hover:text-black dark:hover:bg-yellow"} inline-block uppercase py-3 px-4`}
-                href={`/adventure-collection/${filter.slug}`}
-                scroll={false}
-                prefetch={true}
-              >{filter.name}</Link>
-            </li>
-          ))}
-        </ul>
-      )}
-      <div
-        className="p-2 max-w-[1154px] md:px-5 mx-auto grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-        {filteredAdventures.map(
-          ({ _path, title, price, tripLength, primaryImage }: Adventure, index: number) => {
-            const pathItems = _path.split('/');
-            const cfPath = pathItems.slice(Math.max(pathItems.length - 2, 0)).join('/');
-            const href = `/adventures/${cfPath}`;
-            return (
-              <AdventureCard
-                eager={index < 0}
-                key={_path}
-                href={href}
-                title={title}
-                price={price || ''}
-                duration={tripLength || ''}
-                imageSrc={`${NEXT_PUBLIC_AEM_HOST}${primaryImage?._path || ''}`}
-              />
-            );
-          }
-        )}
-      </div>
-    </div>
-  );
+    const filteredAdventures = adventures.filter(activeCollection.predicate);
+
+    return (<div className="mb-20">
+            {showCategoryPicker &&
+            <ul className="flex-wrap flex p-2 max-w-[1154px] md:px-5 mx-auto ">
+                {adventureCollections.map((filter) => (
+                    <li className="mr-3" key={filter.slug}>
+                        <Link
+                            className={`${filter.slug === activeCollection.slug ? "bg-black text-white hover:text-yellow dark:bg-yellow dark:text-black dark:hover:text-black" : " text-black hover:bg-yellow dark:bg-black dark:text-white dark:hover:text-black dark:hover:bg-yellow"} inline-block uppercase py-3 px-4`}
+                            href={`/adventure-collection/${filter.slug}`}
+                            scroll={false}
+                            prefetch={true}
+                        >{filter.name}</Link>
+                    </li>
+                ))}
+            </ul>}
+            <div
+                className="p-2 max-w-[1154px] md:px-5 mx-auto grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                {filteredAdventures.map(
+                    (adventure: Adventure, index: number) => {
+                        const { _path, title, price, tripLength, primaryImage } = adventure;
+                        const pathItems = _path.split('/');
+                        const cfPath = pathItems.slice(Math.max(pathItems.length - 2, 0)).join('/');
+                        const href = `/adventures/${cfPath}`;
+                        const imageSrc = primaryImage?._path ? `${NEXT_PUBLIC_AEM_HOST}${primaryImage._path}` : '';
+
+                        return (
+                            <AdventureCard
+                                eager={index < 0}
+                                key={_path}
+                                href={href}
+                                title={title}
+                                price={price || ''}
+                                duration={tripLength || ''}
+                                imageSrc={imageSrc}
+                            />
+                        );
+                    }
+                )}
+            </div>
+        </div>
+
+
+    )
 }

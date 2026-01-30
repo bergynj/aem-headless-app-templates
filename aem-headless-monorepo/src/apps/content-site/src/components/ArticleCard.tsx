@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2023 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -15,7 +14,14 @@
 import Link from 'next/link'
 import Image from 'next/image';
 
-export default async function ArticleCard({ _path, href, title, imageSrc }) {
+export interface ArticleCardProps {
+  _path?: string;
+  href: string;
+  title: string;
+  imageSrc: string;
+}
+
+export default async function ArticleCard({ _path, href, title, imageSrc }: ArticleCardProps) {
   const aboveFold = false;
   return (
     <div key={_path} className="group relative">

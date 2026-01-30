@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import {cache} from 'react';
 import {AdventureClient, NEXT_PUBLIC_AEM_HOST} from "../../../../lib/adventures";
+import type { Adventure } from "@aem-headless/content-model";
 
 export const revalidate = 43200; // 12 hours in seconds
 export const dynamic = 'force-static';
@@ -11,9 +12,9 @@ export const preferredRegion = 'auto';
 export async function generateStaticParams() {
     const client = AdventureClient.fromEnv();
     const res = await client.getAllAdventures();
-    const adventures = res?.data?.adventureList?.items;
+    const adventures = res?.data?.adventureList?.items || [];
 
-    return adventures.map((adventure) => {
+    return adventures.map((adventure: Adventure) => {
         const pathItems = adventure._path.split('/');
         return {
             lang: 'en-US',
@@ -22,15 +23,22 @@ export async function generateStaticParams() {
     })
 }
 
-const getAdventureByPath = cache(async (path) => {
+const getAdventureByPath = cache(async (path: string): Promise<Adventure | null> => {
     const client = AdventureClient.fromEnv();
     const res = await client.getAdventureByPath(path);
     const adventure = res?.data?.adventureByPath?.item;
     return adventure;
 });
 
-export default async function Page({params}) {
-    console.log("Rendering "+ params.path[0] + "/" + params.path[1] + "/page.jsx");
+interface PageProps {
+    params: {
+        lang: string;
+        path: string[];
+    };
+}
+
+export default async function Page({params}: PageProps) {
+    console.log("Rendering "+ params.path[0] + "/" + params.path[1] + "/page.tsx");
     const cfPath = `/content/dam/aem-demo-assets/en/adventures/${params.path.join('/')}`;
     const adventure = await getAdventureByPath(cfPath);
     if (!adventure) return (<>Adventure not found</>);
@@ -53,15 +61,17 @@ export default async function Page({params}) {
 
                 <div
                     className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 overflow-hidden lg:h-80 lg:aspect-none">
-                    <Image
-                        src={`${NEXT_PUBLIC_AEM_HOST}${primaryImage._path}`}
-                        alt={title}
-                        width={1680}
-                        height={320}
-                        loading='eager'
-                        sizes="50vw"
-                        className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-                    />
+                    {primaryImage?._path && (
+                        <Image
+                            src={`${NEXT_PUBLIC_AEM_HOST}${primaryImage._path}`}
+                            alt={title || 'Adventure'}
+                            width={1680}
+                            height={320}
+                            loading='eager'
+                            sizes="50vw"
+                            className="w-full h-full object-center object-cover lg:w-full lg:h-full"
+                        />
+                    )}
                 </div>
 
                 {/* Product info */}
@@ -105,7 +115,7 @@ export default async function Page({params}) {
 
                         <div className="mt-10 prose lg:prose-l dark:prose-invert">
                             <div className="mt-4" dangerouslySetInnerHTML={{
-                                __html: description.html,
+                                __html: description?.html || '',
                             }}/>
                         </div>
 
@@ -113,7 +123,7 @@ export default async function Page({params}) {
                             <h2 className="">Itinerary</h2>
 
                             <div className="mt-4" dangerouslySetInnerHTML={{
-                                    __html: itinerary.html,
+                                    __html: itinerary?.html || '',
                                 }}/>
                         </div>
                     </div>

@@ -11,7 +11,13 @@
  *
  */
 
-const CarouselItem = ({children}) => {
+import React from 'react';
+
+interface CarouselItemProps {
+    children: React.ReactNode;
+}
+
+const CarouselItem = ({children}: CarouselItemProps) => {
     return (
         <div className="snap-center flex-none w-full max-h-[650px]">
             {children}

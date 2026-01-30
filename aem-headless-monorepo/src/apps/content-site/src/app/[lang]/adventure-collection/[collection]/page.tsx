@@ -18,7 +18,14 @@ export async function generateStaticParams() {
     }).flat();
 }
 
-export default async function Page({params: {lang, collection}}) {
+interface PageProps {
+    params: {
+        lang: string;
+        collection: string;
+    };
+}
+
+export default async function Page({params: {lang, collection}}: PageProps) {
     return (
         <main className=" px-4">
             <div className="">
@@ -28,7 +35,6 @@ export default async function Page({params: {lang, collection}}) {
                         <Image className="mx-auto h-full"
                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                quality={75}
-                               eager={"true"}
                                priority={true}
                                loading={'eager'}
                                alt={'hero'}

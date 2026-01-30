@@ -1,11 +1,12 @@
 import {match} from '@formatjs/intl-localematcher'
 import Negotiator from 'negotiator'
 import {NextResponse} from 'next/server'
+import type { NextRequest } from 'next/server'
 
 let locales = ['en-US', 'nl-NL', 'nl']
 
 // Get the preferred locale, similar to above or using a library
-function getLocale(request) {
+function getLocale(request: NextRequest) {
     let headers = {'accept-language': 'en-US,en;q=0.5'}
     let languages = new Negotiator({headers}).languages()
     let locales = ['en-US', 'nl-NL', 'nl']
@@ -14,7 +15,7 @@ function getLocale(request) {
     return match(languages, locales, defaultLocale) // -> 'en-US'
 }
 
-export function middleware(request) {
+export function middleware(request: NextRequest) {
     // Check if there is any supported locale in the pathname
     const pathname = request.nextUrl.pathname
     //skip if is a favicon

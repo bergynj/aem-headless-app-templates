@@ -107,7 +107,7 @@ export default async function Page({params: {lang}}: {params: {lang: string}}) {
                 The Australian West coast is a camper's heaven. Endless miles of desert roads leading to secret beaches, vast canyons and crystal clear rivers, and the very few people you are likely to meet on your journey will be some of the most easy-going characters you'll find anywhere in the world.
             </div>
 
-            <HeroAdventureCard adventure={featuredAdventure}/>
+            {featuredAdventure && <HeroAdventureCard adventure={featuredAdventure}/>}
 
             <div className="max-w-[1154px] mx-auto pt-8 px-4">
                 <h2>Our Most Popular Adventures</h2>

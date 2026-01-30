@@ -16,18 +16,25 @@
 import React, {useEffect, useState} from 'react';
 import {wkndIconFont} from "../lib/fonts";
 
-const Carousel = ({children, className}) => {
+interface CarouselProps {
+    children: React.ReactNode[];
+    className?: string;
+}
+
+const Carousel = ({children, className}: CarouselProps) => {
     const [current, setCurrent] = useState(0);
     const size = children.length;
 
     //scroll to current
     useEffect(() => {
         const scroll = document.querySelector(".carousel.overflow-x-scroll");
-        scroll.scroll({
-            left: current * scroll.clientWidth,
-            top: 0,
-            behavior: 'smooth'
-        })
+        if (scroll) {
+            scroll.scroll({
+                left: current * scroll.clientWidth,
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
     }, [current]);
 
     return (
