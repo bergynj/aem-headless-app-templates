@@ -9,7 +9,12 @@
   ],
   "scripts": {
     "dev": "nx run content-site:dev & nx run content-mocks:serve & wait",
+    "dev:site": "nx run content-site:dev",
+    "dev:mocks": "nx run content-mocks:serve",
+    "dev:ui": "nx run @aem-headless/ui:storybook",
+    "start:site": "nx run content-site:start",
     "build": "nx run-many --target=build --all",
+    "build:storybook": "nx run @aem-headless/ui:build-storybook",
     "test": "nx run-many --target=test --all",
     "lint": "nx run-many --target=lint --all",
     "affected:build": "nx affected --target=build",
