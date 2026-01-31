@@ -9,5 +9,17 @@
     "types": ["react", "react-dom", "node"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.stories.ts",
+    "**/*.stories.js",
+    "**/*.stories.jsx",
+    "**/*.stories.tsx"
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.storybook.json"
+    }
+  ]
 }

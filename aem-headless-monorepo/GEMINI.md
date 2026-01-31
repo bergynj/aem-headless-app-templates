@@ -51,6 +51,10 @@ npm run dev
 *   **Mock AEM Server**: [http://localhost:4502](http://localhost:4502)
     *   **GraphiQL Explorer**: [http://localhost:4502/content/graphql/global/endpoint.json](http://localhost:4502/content/graphql/global/endpoint.json)
 
+### Storybook
+*   **Run Storybook**: `nx run @aem-headless/ui:storybook`
+*   **Build Storybook**: `nx run @aem-headless/ui:build-storybook`
+
 ### Build & Test
 *   **Build All**: `nx run-many --target=build --all`
 *   **Lint All**: `nx run-many --target=lint --all`
