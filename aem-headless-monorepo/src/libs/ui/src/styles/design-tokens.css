@@ -1,0 +1,53 @@
+:root {
+  /* Colors */
+  --color-primary-blue:     #0176BE;
+  --color-navy:             #0B2C4C;
+  --color-mint-green:       #27C686;
+  --color-background-light: #CAF4FE;
+  --color-white:            #FFFFFF;
+  --color-text-primary:     #0B2C4C;
+  --color-text-secondary:   #666666;
+  --color-border:           #E0E0E0;
+  --color-shadow:           rgba(11, 44, 76, 0.1);
+
+  /* Typography */
+  --font-family:            'General Sans', sans-serif;
+  --font-size-lg:           48px;
+  --font-size-md:           24px;
+  --font-size-base:         16px;
+  --font-size-sm:           14px;
+  --font-size-xs:           12px;
+
+  --font-weight-bold:       700;
+  --font-weight-semibold:   600;
+  --font-weight-medium:     500;
+  --font-weight-regular:    400;
+
+  --line-height-tight:      1.2;
+  --line-height-normal:     1.5;
+  --line-height-relaxed:    1.8;
+
+  /* Spacing */
+  --spacing-xs:   4px;
+  --spacing-sm:   8px;
+  --spacing-md:   16px;
+  --spacing-lg:   24px;
+  --spacing-xl:   32px;
+  --spacing-2xl:  48px;
+
+  --padding-card: 24px;
+  --gap-items:    16px;
+
+  /* Effects & Transitions */
+  --transition-fast:    0.15s ease-out;
+  --transition-normal:  0.3s ease-out;
+  --transition-slow:    0.5s ease-out;
+
+  --shadow-sm:          0 2px 4px rgba(0,0,0,0.08);
+  --shadow-md:          0 4px 12px rgba(0,0,0,0.12);
+  --shadow-lg:          0 8px 24px rgba(0,0,0,0.16);
+
+  --radius-sm:          4px;
+  --radius-md:          8px;
+  --radius-lg:          12px;
+}
