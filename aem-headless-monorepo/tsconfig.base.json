@@ -1,19 +1,41 @@
 {
   "compilerOptions": {
+    /* 1. Environment & Compatibility 
+     * This group defines where your code will run and what built-in features are available to you.
+     */
     "target": "ES2020",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "allowJs": true,
-    "noEmit": true,
-    "esModuleInterop": true,
     "moduleDetection": "force",
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "strict": true,
-    "skipLibCheck": true,
+
+    /* 2. Strictness & Safety (The Gold Standard)      
+     * This determines how "loud" the compiler is when it sees potential bugs.
+     */
+    "strict": true,                                   // vital for type safety
+    "isolatedModules": true,                          // required for Next.js and bundlers
     "forceConsistentCasingInFileNames": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    // "noPropertyAccessFromIndexSignature": true,    // Disabled to allow process.env.VAR access (TS4111) without ['VAR'] syntax
+
+    /* 3. Module Resolution (Bundler-centric) 
+     * This dictates how files find each other and how imports/exports are handled.
+     */
+    "module": "ESNext",
+    "moduleResolution": "bundler",                    // Modern standard for web projects (Next.js/Vite)
+    "resolveJsonModule": true,
+    "esModuleInterop": true,                          // Essential for importing CommonJS modules in ESM
+    "allowJs": true,
+    "baseUrl": ".",
+    
+    /* 4. Output (Type-Check Only) 
+     * These settings control the physical output of the compilation process. 
+     */
+    "noEmit": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    // "jsx": "react-jsx",
+
     "paths": {
       "@aem-headless/ui": ["./src/libs/ui/src/index.ts"],
       "@aem-headless/ui/*": ["./src/libs/ui/src/components/*"],
@@ -27,5 +49,6 @@
       "@aem-headless/content-model/*": ["./src/libs/content-model/src/*"]
     }
   },
-  "include": []
+  "include": [],
+  "exclude": ["node_modules", "tmp", "dist"]
 }

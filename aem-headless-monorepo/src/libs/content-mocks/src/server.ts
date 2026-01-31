@@ -50,8 +50,10 @@ const gqlHandler = createHandler({
 const handleGraphQL = (req: Request, res: Response, next: NextFunction) => {
   if (req.method === 'GET' && req.headers.accept?.includes('text/html')) {
     res.type('html').send(ruruHTML({ endpoint: req.baseUrl + req.path }));
+    return;
   } else {
     gqlHandler(req, res, next);
+    return;
   }
 };
 
@@ -113,7 +115,8 @@ app.get('/graphql/execute.json/*', (req: Request, res: Response, next: NextFunct
     }
   } else {
     console.warn(`[GraphQL] Unknown persisted query: ${queryName}`);
-    return res.status(404).json({ error: `Unknown persisted query: ${queryName}` });
+    res.status(404).json({ error: `Unknown persisted query: ${queryName}` });
+    return;
   }
 
   // Inject the query into the request body so graphql-http can handle it
@@ -122,6 +125,7 @@ app.get('/graphql/execute.json/*', (req: Request, res: Response, next: NextFunct
   
   // Forward to the GraphQL handler
   gqlHandler(req, res, next);
+  return;
 });
 
 // ============================================ 
@@ -170,11 +174,13 @@ app.get('/content/mysite/*', (req: Request, res: Response) => {
   
   if (!page) {
     console.log(`[REST] Page not found: ${contentPath}`);
-    return res.status(404).json({ error: 'Page not found' });
+    res.status(404).json({ error: 'Page not found' });
+    return;
   }
   
   console.log(`[REST] Returning page: ${page.title}`);
   res.json(page);
+  return;
 });
 
 // Get component as JSON
@@ -189,7 +195,8 @@ app.get('/content/mysite/*/jcr:content/*', (req: Request, res: Response) => {
   
   const page = getPageByPath(pagePath);
   if (!page || !page.components) {
-    return res.status(404).json({ error: 'Component not found' });
+    res.status(404).json({ error: 'Component not found' });
+    return;
   }
   
   const component = page.components.find((c: any) => 
@@ -197,10 +204,12 @@ app.get('/content/mysite/*/jcr:content/*', (req: Request, res: Response) => {
   );
   
   if (!component) {
-    return res.status(404).json({ error: 'Component not found' });
+    res.status(404).json({ error: 'Component not found' });
+    return;
   }
   
   res.json(component);
+  return;
 });
 
 // ============================================ 
@@ -214,6 +223,7 @@ app.get('/assets/*', (req: Request, res: Response) => {
     type: 'asset',
     message: 'Mock asset - in production, serve actual file'
   });
+  return;
 });
 
 // ============================================ 
@@ -231,6 +241,7 @@ app.get('/api/routes', (req: Request, res: Response) => {
       type: r._type
     }))
   });
+  return;
 });
 
 // Get route configuration (for Next.js generateStaticParams)
@@ -252,6 +263,7 @@ app.get('/api/routes/config', (req: Request, res: Response) => {
   });
   
   res.json(config);
+  return;
 });
 
 // Health check
@@ -265,11 +277,13 @@ app.get('/health', (req: Request, res: Response) => {
       routes: `http://localhost:${PORT}/api/routes`
     }
   });
+  return;
 });
 
 // Root redirect
 app.get('/', (req: Request, res: Response) => {
   res.redirect('/content/graphql/global/endpoint.json');
+  return;
 });
 
 // ============================================ 
