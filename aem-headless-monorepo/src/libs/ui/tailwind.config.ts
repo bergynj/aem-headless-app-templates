@@ -1,10 +1,9 @@
 import type { Config } from "tailwindcss";
-import { join } from "path";
 
 const config: Config = {
   darkMode: ["class"],
   content: [
-    join(__dirname, "src/**/*.{ts,tsx}"),
+    "./src/**/*.{ts,tsx}",
   ],
   theme: {
     container: {
