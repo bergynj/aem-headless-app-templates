@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import FeatureRow, { FeatureRowProps } from './FeatureRow';
+import FeatureRow, { FeatureRowProps } from '../ds/FeatureRow';
 
 export interface FeatureListProps {
   features: FeatureRowProps[];

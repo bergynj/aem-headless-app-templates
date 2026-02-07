@@ -1,9 +1,9 @@
 import React from 'react';
-import Badge from './Badge';
-import PriceDisplay from './PriceDisplay';
+import Badge from '../ds/Badge';
+import PriceDisplay from '../ds/PriceDisplay';
 import FeatureList from './FeatureList';
-import Button from './Button';
-import { FeatureRowProps } from './FeatureRow';
+import Button from '../ds/Button';
+import { FeatureRowProps } from '../ds/FeatureRow';
 
 export interface PricingCardProps {
   title: string;

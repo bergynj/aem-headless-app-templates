@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import PricingCard from './PricingCard';
 import PricingCarousel from './PricingCarousel';
-import Toggle from './Toggle';
+import Toggle from '../ds/Toggle';
 
 const meta: Meta = {
   title: 'Design System/Pricing',
