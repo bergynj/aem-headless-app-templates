@@ -61,12 +61,29 @@ npm run dev
 
 ## Key Conventions
 
+
 *   **Dependency Management**: All packages (React, Next.js, etc.) are defined in the **root** `package.json`. Do not add dependencies to individual app/lib `package.json` files; they act only as Nx project markers.
+
 *   **Data Loading**:
     *   The Mock Server uses `fs.readFileSync` to load `content-tree.json` to avoid ESM import attribute compatibility issues across Node versions.
     *   The App uses `AEMClient` which automatically toggles between the real AEM environment and the local mock server based on `NEXT_PUBLIC_AEM_HOST`.
+
 *   **GraphQL**:
     *   Persisted queries (e.g., `aem-demo-assets/adventures-all`) are intercepted by the Mock Server middleware and mapped to standard internal GraphQL queries.
+
+*   **UI & Design System** (Mandatory):
+    This repository follows a **Vibe-like design system** as defined in:
+    * `DESIGN_SYSTEM.md`
+    * `ADR-UI-001`
+
+    - **Layered Architecture**: Follow the strict layering in `libs/ui`:
+    `design-tokens → layout → components/core → components/ds → components/composite`.
+    - **Import Rules**: Applications must import UI **only** from `components/ds`, `components/composite`, or `layout`. `components/core` is internal-only.
+    - **Token Discipline**: Use **semantic tokens only** (e.g. `--color-brand`). No hardcoded hex values or arbitrary Tailwind utilities (e.g. `bg-[#fff]`, `gap-[14px]`).
+    - **Variants**: Use **typed variants** (e.g. `cva`). Variant names must be semantic. No boolean styling props.
+    - **Storybook**: All UI components must have corresponding Storybook stories. Storybook is the **source of truth** for intended usage.
+    
+    If a change bypasses these rules, it is incorrect.
 
 ## Recent Changes
 *   **Upgraded to Next.js 14**: To resolve compatibility issues with Nx 22.
